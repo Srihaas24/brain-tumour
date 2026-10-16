@@ -1,0 +1,31 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Large Datasets (Do not push 6,000 image files to GitHub)
+dataset/
+30533120/
+*.zip
+*.tar.gz
+
+# Checkpoints / Large weights (Files > 100MB fail GitHub push)
+models/*.pt
+models/*.pth
+*.pt
+*.pth
+
+# Environments
+env/
+venv/
+.env
+
+# IDE / System files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs & temp
+*.log
+scratch/

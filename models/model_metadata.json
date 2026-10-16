@@ -1,0 +1,17 @@
+{
+  "backbone": "mobilenet_v3",
+  "best_val_acc": 0.95,
+  "epochs": 10,
+  "classes": [
+    "glioma",
+    "meningioma",
+    "no_tumor",
+    "pituitary"
+  ],
+  "image_size": [
+    224,
+    224
+  ],
+  "total_training_time_sec": 2612.95,
+  "timestamp": "2026-10-16 23:47:40"
+}

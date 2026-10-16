@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroScan AI — Brain Tumor MRI Detection & Classification</title>
+    <meta name="description" content="AI-powered diagnostic screening system for multi-class brain tumor classification (Glioma, Meningioma, Pituitary, Normal) trained on BRISC 2025 dataset with Grad-CAM explainability.">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <!-- Ambient Background Lighting -->
+    <div class="ambient-glow ambient-glow-1"></div>
+    <div class="ambient-glow ambient-glow-2"></div>
+
+    <div class="container">
+        <!-- Navigation Header -->
+        <header class="navbar">
+            <div class="logo-group">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>NeuroScan AI</h1>
+                    <span>BRISC 2025 Clinical Diagnostic Engine</span>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <div class="status-chip">
+                    <span class="status-dot"></span>
+                    <span>AI Model Active</span>
+                </div>
+                <button id="btn-open-train" class="btn-secondary" title="View Training & Architecture Instructions">
+                    <i class="fa-solid fa-terminal"></i> Training Guide
+                </button>
+                <button id="btn-open-stats" class="btn-secondary" title="View Dataset Statistics">
+                    <i class="fa-solid fa-chart-pie"></i> Dataset Stats
+                </button>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-pill">
+                <i class="fa-solid fa-dna"></i> Deep Neural MRI Classifier & Explainable AI (Grad-CAM)
+            </div>
+            <h1 class="hero-title">
+                Brain Tumor Detection & <span class="gradient-text">Pathological Categorization</span>
+            </h1>
+            <p class="hero-desc">
+                Upload a T1-weighted MRI scan to automatically detect intracranial lesions, pinpoint anatomical regions of interest with Grad-CAM activation heatmaps, and classify into Glioma, Meningioma, Pituitary Tumor, or Healthy Brain.
+            </p>
+        </section>
+
+        <!-- Main Workspace Grid -->
+        <main class="dashboard-grid">
+            <!-- Left Column: Scan Upload & Quick Test Gallery -->
+            <div class="upload-column">
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Upload MRI Slice
+                        </h2>
+                        <span style="font-size: 11px; color: var(--text-dim); font-family: var(--font-mono);">
+                            T1-Weighted (Axial / Coronal / Sagittal)
+                        </span>
+                    </div>
+
+                    <!-- Drag & Drop Zone -->
+                    <div id="upload-dropzone" class="upload-dropzone">
+                        <div class="upload-icon">
+                            <i class="fa-solid fa-file-medical"></i>
+                        </div>
+                        <div class="upload-prompt">
+                            <h3>Drag & Drop MRI Scan Here</h3>
+                            <p>or click to browse from your computer (JPG, PNG)</p>
+                        </div>
+                        <input type="file" id="file-input" class="file-input" accept="image/*">
+                    </div>
+
+                    <!-- Curated Sample Scan Library -->
+                    <div class="quick-samples">
+                        <div class="quick-samples-title">
+                            <span><i class="fa-solid fa-vial-virus"></i> Quick Test Gallery</span>
+                            <span style="color: var(--cyan-primary); font-size: 11px;">1-Click Diagnosis</span>
+                        </div>
+                        <div class="samples-row">
+                            <!-- Glioma -->
+                            <div class="sample-card" data-sample="sample_glioma.jpg" title="Test with Glioma Sample">
+                                <img src="/static/samples/sample_glioma.jpg" alt="Glioma MRI Sample">
+                                <div class="sample-label">Glioma</div>
+                                <div class="sample-sub">Axial T1</div>
+                            </div>
+                            <!-- Meningioma -->
+                            <div class="sample-card" data-sample="sample_meningioma.jpg" title="Test with Meningioma Sample">
+                                <img src="/static/samples/sample_meningioma.jpg" alt="Meningioma MRI Sample">
+                                <div class="sample-label">Meningioma</div>
+                                <div class="sample-sub">Axial T1</div>
+                            </div>
+                            <!-- Pituitary -->
+                            <div class="sample-card" data-sample="sample_pituitary.jpg" title="Test with Pituitary Sample">
+                                <img src="/static/samples/sample_pituitary.jpg" alt="Pituitary MRI Sample">
+                                <div class="sample-label">Pituitary</div>
+                                <div class="sample-sub">Sagittal T1</div>
+                            </div>
+                            <!-- Healthy / No Tumor -->
+                            <div class="sample-card" data-sample="sample_no_tumor.jpg" title="Test with Normal Sample">
+                                <img src="/static/samples/sample_no_tumor.jpg" alt="Normal MRI Sample">
+                                <div class="sample-label">No Tumor</div>
+                                <div class="sample-sub">Normal Brain</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dataset Information Card -->
+                <div class="glass-panel" style="margin-top: 24px;">
+                    <div class="panel-header">
+                        <h3 class="panel-title" style="font-size: 15px;">
+                            <i class="fa-solid fa-circle-info"></i> Dataset Reference
+                        </h3>
+                        <span class="status-chip" style="font-size: 11px; padding: 4px 10px;">BRISC 2025</span>
+                    </div>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+                        Trained on 6,000 expert-annotated T1-weighted MRI slices across balanced multi-class splits (Glioma, Meningioma, Pituitary, Normal).
+                    </p>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <span class="status-chip" style="background: rgba(244, 63, 94, 0.1); border-color: rgba(244, 63, 94, 0.3); color: #fb7185;">
+                            Glioma: 1,500
+                        </span>
+                        <span class="status-chip" style="background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3); color: #fbbf24;">
+                            Meningioma: 1,500
+                        </span>
+                        <span class="status-chip" style="background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.3); color: #c084fc;">
+                            Pituitary: 1,500
+                        </span>
+                        <span class="status-chip" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: #34d399;">
+                            Normal: 1,500
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Results & Interactive Dual Viewer -->
+            <div class="results-column">
+                <!-- Initial Empty State -->
+                <div id="empty-state" class="glass-panel empty-state">
+                    <div class="empty-icon">
+                        <i class="fa-solid fa-microscope"></i>
+                    </div>
+                    <h3 style="font-size: 18px; margin-bottom: 8px; color: var(--text-main);">No Scan Analyzed Yet</h3>
+                    <p style="max-width: 420px; font-size: 14px; margin-bottom: 20px;">
+                        Upload an MRI slice or pick a sample from the gallery on the left to start real-time classification and visual lesion mapping.
+                    </p>
+                </div>
+
+                <!-- Analysis Results Panel -->
+                <div id="results-container" class="glass-panel viewer-container" style="display: none;">
+                    <div class="panel-header">
+                        <h2 class="panel-title">
+                            <i class="fa-solid fa-chart-simple"></i> Diagnostic Assessment
+                        </h2>
+                        <button class="btn-secondary" onclick="window.print()" title="Print / Export Clinical Report">
+                            <i class="fa-solid fa-print"></i> Export Report
+                        </button>
+                    </div>
+
+                    <!-- Primary Hero Diagnosis Banner -->
+                    <div id="diagnosis-banner" class="diagnosis-banner has-tumor">
+                        <div class="diag-title-area">
+                            <span id="diag-category" class="diag-category-sub">Intracranial Neoplasm Detected</span>
+                            <div id="diag-status" class="diag-primary-name">Glioma</div>
+                        </div>
+                        <div class="diag-confidence-gauge">
+                            <div id="confidence-val" class="gauge-value">98.4%</div>
+                            <div class="gauge-label">Model Confidence</div>
+                        </div>
+                    </div>
+
+                    <!-- Dual MRI Visualizer (Original Scan vs Grad-CAM Overlay) -->
+                    <div id="scanning-overlay" class="scan-viewers-wrapper">
+                        <!-- Original MRI -->
+                        <div class="scan-box">
+                            <div class="scan-badge">
+                                <i class="fa-solid fa-image"></i> Original T1 Scan
+                            </div>
+                            <div class="scan-beam"></div>
+                            <img id="original-scan-img" src="" alt="Original MRI Slice">
+                        </div>
+
+                        <!-- Grad-CAM Heatmap Localization -->
+                        <div class="scan-box">
+                            <div class="scan-badge" style="color: #f43f5e; border-color: rgba(244, 63, 94, 0.4);">
+                                <i class="fa-solid fa-fire"></i> Grad-CAM Lesion Heatmap
+                            </div>
+                            <div class="scan-beam"></div>
+                            <img id="heatmap-scan-img" src="" alt="Grad-CAM Tumor Heatmap">
+                        </div>
+                    </div>
+
+                    <!-- Heatmap Opacity Cross-fader Slider -->
+                    <div class="slider-control">
+                        <span><i class="fa-solid fa-sliders"></i> Heatmap Intensity:</span>
+                        <input type="range" id="opacity-slider" min="0" max="100" value="85">
+                        <span id="opacity-val" style="font-family: var(--font-mono); font-weight: 600; color: var(--cyan-primary);">85%</span>
+                    </div>
+
+                    <!-- Multi-Class Probability Breakdown -->
+                    <div class="prob-section">
+                        <h3 style="font-size: 14px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-dim);">
+                            Multi-Class Probability Distribution
+                        </h3>
+
+                        <!-- Glioma -->
+                        <div class="prob-item">
+                            <div class="prob-header">
+                                <span style="color: #fb7185;"><i class="fa-solid fa-circle-dot"></i> Glioma</span>
+                                <span id="val-glioma" style="font-family: var(--font-mono);">0.0%</span>
+                            </div>
+                            <div class="prob-track">
+                                <div id="bar-glioma" class="prob-fill fill-glioma"></div>
+                            </div>
+                        </div>
+
+                        <!-- Meningioma -->
+                        <div class="prob-item">
+                            <div class="prob-header">
+                                <span style="color: #fbbf24;"><i class="fa-solid fa-circle-dot"></i> Meningioma</span>
+                                <span id="val-meningioma" style="font-family: var(--font-mono);">0.0%</span>
+                            </div>
+                            <div class="prob-track">
+                                <div id="bar-meningioma" class="prob-fill fill-meningioma"></div>
+                            </div>
+                        </div>
+
+                        <!-- Pituitary -->
+                        <div class="prob-item">
+                            <div class="prob-header">
+                                <span style="color: #c084fc;"><i class="fa-solid fa-circle-dot"></i> Pituitary Tumor</span>
+                                <span id="val-pituitary" style="font-family: var(--font-mono);">0.0%</span>
+                            </div>
+                            <div class="prob-track">
+                                <div id="bar-pituitary" class="prob-fill fill-pituitary"></div>
+                            </div>
+                        </div>
+
+                        <!-- Healthy / No Tumor -->
+                        <div class="prob-item">
+                            <div class="prob-header">
+                                <span style="color: #34d399;"><i class="fa-solid fa-circle-dot"></i> No Tumor (Normal)</span>
+                                <span id="val-notumor" style="font-family: var(--font-mono);">0.0%</span>
+                            </div>
+                            <div class="prob-track">
+                                <div id="bar-notumor" class="prob-fill fill-notumor"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clinical Pathology & Treatment Guidance -->
+                    <div class="clinical-card">
+                        <div class="clinical-row">
+                            <div class="clinical-tag">Pathological Staging & Severity</div>
+                            <div id="clinic-severity" class="clinical-text" style="font-weight: 600;">--</div>
+                        </div>
+                        <div class="clinical-row">
+                            <div class="clinical-tag">Anatomical Origin</div>
+                            <div id="clinic-origin" class="clinical-text">--</div>
+                        </div>
+                        <div class="clinical-row">
+                            <div class="clinical-tag">Pathological Findings</div>
+                            <div id="clinic-desc" class="clinical-text">--</div>
+                        </div>
+                        <div class="clinical-row">
+                            <div class="clinical-tag">Characteristic Clinical Symptoms</div>
+                            <div id="clinic-symptoms" class="clinical-text">--</div>
+                        </div>
+                        <div class="clinical-row">
+                            <div class="clinical-tag">Recommended Clinical Workflow</div>
+                            <div id="clinic-actions" class="clinical-text" style="color: #e2e8f0;">--</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <p>
+                <strong>NeuroScan AI</strong> &bull; Based on BRISC 2025 Brain MRI Dataset &bull; For Clinical Research & Decision Support
+            </p>
+            <p style="margin-top: 6px; font-size: 11px; opacity: 0.6;">
+                Disclaimer: This AI tool is designed for research and educational purposes. Always consult a qualified board-certified neuroradiologist for definitive clinical diagnosis.
+            </p>
+        </footer>
+    </div>
+
+    <!-- Modal 1: Training Guide -->
+    <div id="train-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fa-solid fa-terminal" style="color: var(--cyan-primary);"></i> How to Train the Model</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            
+            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">
+                You can train or fine-tune the brain tumor classification model directly using the provided training pipeline:
+            </p>
+
+            <h4 style="font-size: 14px; margin-top: 16px; color: #fff;">1. Standard Training Command:</h4>
+            <div class="code-box">python training/train.py --epochs 10 --batch-size 32 --lr 0.0005 --backbone mobilenet_v3</div>
+
+            <h4 style="font-size: 14px; margin-top: 16px; color: #fff;">2. Quick Smoke-Test (20% subset):</h4>
+            <div class="code-box">python training/train.py --epochs 2 --batch-size 32 --subset 0.2</div>
+
+            <h4 style="font-size: 14px; margin-top: 16px; color: #fff;">3. Evaluate on 1,000-image Test Set:</h4>
+            <div class="code-box">python training/evaluate.py --model-path models/best_model.pt</div>
+
+            <h4 style="font-size: 14px; margin-top: 16px; color: #fff;">4. CLI Parameters:</h4>
+            <ul style="font-size: 13px; color: var(--text-muted); margin-left: 20px; line-height: 1.8;">
+                <li><code>--epochs</code>: Number of training cycles (default: 5)</li>
+                <li><code>--batch-size</code>: Images per batch (default: 32)</li>
+                <li><code>--lr</code>: Learning rate for AdamW optimizer (default: 0.0005)</li>
+                <li><code>--backbone</code>: Architecture (<code>mobilenet_v3</code>, <code>resnet18</code>, or <code>custom</code>)</li>
+                <li><code>--device</code>: Device to compute on (<code>cpu</code> or <code>cuda</code>)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Modal 2: Dataset Statistics -->
+    <div id="stats-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fa-solid fa-chart-pie" style="color: var(--purple-accent);"></i> BRISC 2025 Dataset Statistics</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            
+            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">
+                BRISC (BRain tumor Image Segmentation & Classification) is a physician-annotated multi-class T1-weighted MRI benchmark dataset.
+            </p>
+
+            <div style="background: #04070e; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border-color); color: var(--cyan-primary); text-align: left;">
+                            <th style="padding: 8px;">Class Category</th>
+                            <th style="padding: 8px;">Train Set</th>
+                            <th style="padding: 8px;">Test Set</th>
+                            <th style="padding: 8px;">Total Slices</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 8px; font-weight: 600;">Glioma (gl)</td>
+                            <td style="padding: 8px;">1,250</td>
+                            <td style="padding: 8px;">250</td>
+                            <td style="padding: 8px;">1,500</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 8px; font-weight: 600;">Meningioma (me)</td>
+                            <td style="padding: 8px;">1,250</td>
+                            <td style="padding: 8px;">250</td>
+                            <td style="padding: 8px;">1,500</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 8px; font-weight: 600;">Pituitary (pi)</td>
+                            <td style="padding: 8px;">1,250</td>
+                            <td style="padding: 8px;">250</td>
+                            <td style="padding: 8px;">1,500</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 8px; font-weight: 600;">No Tumor (nt)</td>
+                            <td style="padding: 8px;">1,250</td>
+                            <td style="padding: 8px;">250</td>
+                            <td style="padding: 8px;">1,500</td>
+                        </tr>
+                        <tr style="color: var(--cyan-primary); font-weight: bold;">
+                            <td style="padding: 8px;">Total Samples</td>
+                            <td style="padding: 8px;">5,000</td>
+                            <td style="padding: 8px;">1,000</td>
+                            <td style="padding: 8px;">6,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p style="font-size: 13px; color: var(--text-dim);">
+                Anatomical Planes: Axial, Coronal, Sagittal &bull; Slices: 512 &times; 512 T1-weighted MRI.
+            </p>
+        </div>
+    </div>
+
+    <!-- Client-side Logic Script -->
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
