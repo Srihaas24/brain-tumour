@@ -3,17 +3,32 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Large Datasets (Do not push 6,000 image files to GitHub)
+# Large Datasets
 dataset/
 30533120/
 *.zip
 *.tar.gz
+ALTHON2.0/
 
-# Checkpoints / Large weights (Files > 100MB fail GitHub push)
-models/*.pt
+# Checkpoints / Large weights (>100MB)
 models/*.pth
-*.pt
 *.pth
+# Allow trained nnU-Net model weights (28MB, well below GitHub 100MB limit)
+models/*.pt
+!models/best_nnunet_model.pt
+
+# Frontend build & dependencies
+frontend/node_modules/
+frontend/dist/
+node_modules/
+dist/
+
+# Scratch & temporary images
+scratch_*.png
+*base64.png
+crop_*.png
+wiki_normal.png
+scratch/
 
 # Environments
 env/
@@ -25,7 +40,4 @@ venv/
 .idea/
 .DS_Store
 Thumbs.db
-
-# Logs & temp
 *.log
-scratch/
