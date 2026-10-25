@@ -15,7 +15,6 @@ from backend.app.models.segmenter import get_segmenter
 from backend.app.models.lightweight_segmenter import get_lightweight_segmenter
 from backend.app.models.classifier import get_classifier, CLASS_NAMES, CLASS_DISPLAY, TUMOR_DETAILS
 from backend.app.services.preprocessing import decode_image_bytes, make_clinical_overlay, make_transparent_mask, numpy_to_base64
-from backend.app.services.uncertainty import estimate_mc_uncertainty
 from backend.app.services.quality_assessment import evaluate_scan_quality
 from backend.app.services.measurements import compute_measurements
 from backend.app.services.reconstruction import generate_3d_mesh
@@ -59,7 +58,6 @@ def list_models():
                 "architecture": "U-Net with InstanceNorm & LeakyReLU",
                 "weights_status": "Loaded (Trained on BRISC 2025)",
                 "input_resolution": "224x224x3",
-                "supports_mc_dropout": True
             },
             {
                 "id": "fast-brain-unet",
@@ -68,8 +66,7 @@ def list_models():
                 "parameters": "1.15M (6.4x compressed)",
                 "architecture": "Depthwise Separable U-Net",
                 "weights_status": "Initialized / Ready",
-                "input_resolution": "224x224x3",
-                "supports_mc_dropout": False
+                "input_resolution": "224x224x3"
             },
             {
                 "id": "mobilenet-classifier",
@@ -150,19 +147,17 @@ async def upload_scan(file: UploadFile = File(...), slice_idx: Optional[int] = F
 async def run_analysis(
     file: UploadFile = File(...),
     slice_idx: Optional[int] = Form(None),
-    model_choice: str = Form("nnunet-2d"),
-    mc_dropout_passes: int = Form(6)
+    model_choice: str = Form("nnunet-2d")
 ):
     """
     Executes full multi-stage AI diagnostic pipeline:
     1. Preprocessing & intensity normalization
     2. 4-class Tumor Classification with probability distribution
     3. nnU-Net / FastBrain-UNet Segmentation
-    4. Monte Carlo Dropout Uncertainty Estimation
-    5. Rule-Based 8-point Quality Assessment
-    6. Geometrical & Physical Measurements
-    7. 3D Marching Cubes Mesh Reconstruction
-    8. Human Review Recommendation Module
+    4. Rule-Based 8-point Quality Assessment
+    5. Geometrical & Physical Measurements
+    6. 3D Marching Cubes Mesh Reconstruction
+    7. Human Review Recommendation Module
     """
     pipeline_t0 = time.time()
     file_bytes = await file.read()
@@ -277,25 +272,14 @@ async def run_analysis(
     if top_class_id == 'no_tumor':
         bin_mask_orig = np.zeros_like(bin_mask_orig)
 
-    # 3. Monte Carlo Uncertainty Estimation
-    mc_passes = max(4, min(mc_dropout_passes, 16))
-    uncertainty_data = estimate_mc_uncertainty(
-        seg_model,
-        input_tensor,
-        num_passes=mc_passes,
-        device=device,
-        target_shape=(h_orig, w_orig),
-        original_image=img_rgb
-    )
+    # 3. Automated 8-point Quality Assessment
+    quality_data = evaluate_scan_quality(img_rgb, binary_mask=bin_mask_orig, filename=file.filename)
 
-    # 4. Automated 8-point Quality Assessment
-    quality_data = evaluate_scan_quality(img_rgb, binary_mask=bin_mask_orig, uncertainty_info=uncertainty_data, filename=file.filename)
-
-    # 5. Geometrical & Physical Measurements
+    # 4. Geometrical & Physical Measurements
     voxel_spacing = metadata.get("voxel_spacing")
     measurements = compute_measurements(bin_mask_orig, pixel_spacing=voxel_spacing[:2] if voxel_spacing else None, is_volumetric=is_volumetric)
 
-    # 6. 3D Surface Reconstruction (Marching Cubes)
+    # 5. 3D Surface Reconstruction (Marching Cubes)
     slice_info = {
         "current_slice": metadata.get("current_slice", 0),
         "total_slices": metadata.get("total_slices", 1)
@@ -309,7 +293,7 @@ async def run_analysis(
         slice_info=slice_info
     )
 
-    # 7. Render Visuals & Overlays
+    # 6. Render Visuals & Overlays
     overlay_img = make_clinical_overlay(img_rgb, bin_mask_orig)
     transparent_mask_img = make_transparent_mask(bin_mask_orig)
 
@@ -318,12 +302,10 @@ async def run_analysis(
     overlay_b64 = numpy_to_base64(overlay_img)
     transparent_b64 = numpy_to_base64(transparent_mask_img)
 
-    # 8. Human Review Recommendation Module
+    # 7. Human Review Recommendation Module
     review_reasons = []
     if top_confidence < 0.65:
         review_reasons.append(f"Classification confidence is below standard threshold ({round(top_confidence*100, 1)}% < 65%).")
-    if uncertainty_data['boundary_uncertainty'] > 35.0:
-        review_reasons.append(f"Elevated boundary uncertainty detected ({uncertainty_data['boundary_uncertainty']}%). Tumor borders are indistinct.")
     if quality_data['overall_status'] == "Needs review":
         review_reasons.extend(quality_data['warnings'])
     if (top_class_id == 'no_tumor' and bin_mask_orig.sum() > 100) or (top_class_id != 'no_tumor' and bin_mask_orig.sum() == 0):
@@ -350,7 +332,6 @@ async def run_analysis(
             "probabilities": prob_distribution
         },
         "segmentation": measurements,
-        "uncertainty": uncertainty_data,
         "quality": quality_data,
         "mesh": mesh_data,
         "human_review": {
@@ -383,14 +364,6 @@ async def run_analysis(
             "status_label": status_label
         },
         "segmentation": measurements,
-        "uncertainty": {
-            "boundary_uncertainty": uncertainty_data['boundary_uncertainty'],
-            "overall_uncertainty_score": uncertainty_data['overall_uncertainty_score'],
-            "num_stochastic_passes": uncertainty_data['num_stochastic_passes'],
-            "review_recommended": uncertainty_data['review_recommended'],
-            "heatmap_base64": uncertainty_data['heatmap_base64'],
-            "overlay_base64": uncertainty_data.get('overlay_base64')
-        },
         "quality": quality_data,
         "mesh_3d": {
             "has_mesh": mesh_data['has_mesh'],
@@ -537,7 +510,6 @@ def export_summary(result_id: str, export_format: str):
             f"Lesion Detected,{res['segmentation']['has_lesion']}",
             f"Pixel Count,{res['segmentation']['pixel_count']}",
             f"Occupied Area Percentage,{res['segmentation']['percentage_occupied']}%",
-            f"Boundary Uncertainty,{res['uncertainty']['boundary_uncertainty']}%",
             f"Quality Status,{res['quality']['overall_status']}",
             f"Human Review Status,{res['human_review']['status']}"
         ]

@@ -11,7 +11,7 @@ export const Footer: React.FC = () => {
           <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
           <div className="text-xs text-amber-200/90 leading-relaxed">
             <span className="font-semibold text-amber-300">Important Medical Research Disclaimer: </span>
-            NeuroVision AI is an experimental AI research demonstration platform designed for technical evaluation of multi-task deep learning architectures, Monte Carlo dropout uncertainty estimation, and automated imaging quality assessment. It is <strong>not a certified medical device</strong> (FDA/CE-IVD) and <strong>does not provide medical diagnoses or treatment recommendations</strong>. All clinical scans must be independently reviewed by a qualified board-certified radiologist.
+            NeuroVision is an experimental research demonstration platform designed for technical evaluation of multi-task deep learning architectures and automated imaging quality assessment. It is <strong>not a certified medical device</strong> (FDA/CE-IVD) and <strong>does not provide medical diagnoses or treatment recommendations</strong>. All clinical scans must be independently reviewed by a qualified board-certified radiologist.
           </div>
         </div>
 
@@ -19,10 +19,10 @@ export const Footer: React.FC = () => {
           <div>
             <div className="flex items-center space-x-2 text-white font-semibold mb-2">
               <HeartPulse className="h-4 w-4 text-cyan-400" />
-              <span>NeuroVision AI Architecture</span>
+              <span>NeuroVision Architecture</span>
             </div>
             <p className="text-slate-400 leading-relaxed">
-              Automated 2D/3D brain MRI segmentation, Monte Carlo uncertainty mapping, and quality assurance framework powered by PyTorch and FastAPI.
+              Automated 2D/3D brain MRI segmentation and quality assurance framework powered by PyTorch and FastAPI.
             </p>
           </div>
 
@@ -32,7 +32,7 @@ export const Footer: React.FC = () => {
               <li>• 2D nnU-Net (BRISC 2025 Trained)</li>
               <li>• FastBrain-UNet (Edge Model)</li>
               <li>• MobileNetV3 4-Class Classifier</li>
-              <li>• Monte Carlo Dropout Uncertainty</li>
+              <li>• Lesion Coverage QA Check</li>
             </ul>
           </div>
 
@@ -58,7 +58,7 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400">
-          <p>© 2026 NeuroVision AI Project. Developed for Advanced Medical AI Research & Hackathon Evaluation.</p>
+          <p>© 2026 NeuroVision Project. Developed for Advanced Medical Research & Hackathon Evaluation.</p>
           <p className="mt-2 sm:mt-0 font-mono text-[11px] text-slate-400">
             PyTorch 2.4 | FastAPI | Three.js | React 19
           </p>

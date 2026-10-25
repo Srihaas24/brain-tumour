@@ -60,14 +60,6 @@ export interface QualityAssessmentResult {
   estimated_sequence: string;
 }
 
-export interface UncertaintyResult {
-  boundary_uncertainty: number;
-  overall_uncertainty_score: number;
-  num_stochastic_passes: number;
-  review_recommended: boolean;
-  heatmap_base64: string;
-  overlay_base64?: string;
-}
 
 export interface Mesh3DResult {
   has_mesh: boolean;
@@ -107,7 +99,6 @@ export interface AnalysisResponse {
   transparent_overlay_base64?: string;
   classification: ClassificationResult;
   segmentation: SegmentationStats;
-  uncertainty: UncertaintyResult;
   quality: QualityAssessmentResult;
   mesh_3d: Mesh3DResult;
   human_review: HumanReviewRecommendation;

@@ -46,13 +46,6 @@ class QualityAssessmentResult(BaseModel):
     contrast_score: float
     estimated_sequence: str
 
-class UncertaintyResult(BaseModel):
-    boundary_uncertainty: float
-    overall_uncertainty_score: float
-    num_stochastic_passes: int
-    review_recommended: bool
-    heatmap_base64: str
-    overlay_base64: Optional[str] = None
 
 class Mesh3DResult(BaseModel):
     has_mesh: bool
@@ -84,7 +77,6 @@ class AnalysisResponse(BaseModel):
     transparent_overlay_base64: Optional[str] = None
     classification: ClassificationResult
     segmentation: SegmentationStats
-    uncertainty: UncertaintyResult
     quality: QualityAssessmentResult
     mesh_3d: Mesh3DResult
     human_review: HumanReviewRecommendation

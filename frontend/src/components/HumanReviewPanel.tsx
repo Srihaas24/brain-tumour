@@ -62,7 +62,7 @@ export const HumanReviewPanel: React.FC<HumanReviewPanelProps> = ({ humanReview 
           <div className="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-800/40 text-xs text-emerald-200 flex items-center space-x-2.5">
             <ShieldCheck className="h-5 w-5 text-emerald-400 shrink-0" />
             <span>
-              All segmentation, uncertainty, and quality metrics are within normal research boundaries. No automated warnings triggered.
+              All segmentation and quality metrics are within normal research boundaries. No automated warnings triggered.
             </span>
           </div>
         )}

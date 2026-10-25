@@ -29,14 +29,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div>
             <div className="flex items-center space-x-2">
               <span className="font-bold text-xl tracking-tight text-white group-hover:text-cyan-400 transition-colors">
-                NeuroVision<span className="text-cyan-400">.AI</span>
+                NeuroVision<span className="text-cyan-400">.Vision</span>
               </span>
               <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800/60">
                 v2.4
               </span>
             </div>
             <p className="text-[11px] text-slate-400 hidden sm:block">
-              Uncertainty-Guided Brain Tumour Segmentation & Quality Assessment
+              Brain Tumour Segmentation & Quality Assessment
             </p>
           </div>
         </div>

@@ -37,16 +37,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
         {/* Title & Subtitle */}
         <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight max-w-4xl leading-tight">
-          NeuroVision<span className="text-cyan-400">.AI</span>
+          NeuroVision<span className="text-cyan-400">.Vision</span>
         </h1>
         <p className="mt-4 text-xl sm:text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-200 to-slate-200 max-w-3xl">
-          Uncertainty-Guided Brain Tumour Segmentation & Quality Assessment
+          Brain Tumour Segmentation & Quality Assessment
         </p>
 
         <p className="mt-4 text-slate-400 text-base max-w-2xl leading-relaxed">
           A modular deep learning framework combining trained 2D nnU-Net segmentation, 
-          Monte Carlo dropout boundary variance estimation, automated 8-point scan quality auditing, 
-          and interactive 3D WebGL anatomical reconstruction.
+          automated 8-point scan quality auditing, and interactive 3D WebGL anatomical reconstruction.
         </p>
 
         {/* CTA Buttons */}
@@ -109,7 +108,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <Brain className="h-6 w-6" />
               </div>
               <span className="text-[11px] font-mono text-sky-400 uppercase tracking-wider font-semibold">Step 02</span>
-              <h3 className="text-base font-bold text-white mt-1">AI Classification</h3>
+              <h3 className="text-base font-bold text-white mt-1">Tumour Classification</h3>
               <p className="text-xs text-slate-400 mt-2 leading-relaxed">
                 4-class tumor typing across Glioma, Meningioma, Pituitary, and Healthy Parenchyma.
               </p>
@@ -133,9 +132,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <Activity className="h-6 w-6" />
               </div>
               <span className="text-[11px] font-mono text-amber-400 uppercase tracking-wider font-semibold">Step 04</span>
-              <h3 className="text-base font-bold text-white mt-1">QA & Uncertainty</h3>
+              <h3 className="text-base font-bold text-white mt-1">QA & Validation</h3>
               <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                Monte Carlo stochastic variance mapping and 8-point image integrity audit.
+                8-point automated image integrity audit covering sharpness, contrast, domain fit and lesion plausibility.
               </p>
             </div>
 
@@ -162,7 +161,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             Core System Capabilities
           </h2>
           <p className="text-3xl font-extrabold text-white mt-1">
-            State-of-the-Art Medical AI Architecture
+            State-of-the-Art Medical Architecture
           </p>
         </div>
 
@@ -173,7 +172,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="h-12 w-12 rounded-xl bg-cyan-950/80 border border-cyan-800 flex items-center justify-center text-cyan-400 mb-4 group-hover:scale-105 transition-transform">
               <Brain className="h-6 w-6" />
             </div>
-            <h3 className="text-lg font-bold text-white">AI Tumour Classification</h3>
+            <h3 className="text-lg font-bold text-white">Tumour Classification</h3>
             <p className="text-xs text-slate-400 mt-2 leading-relaxed">
               4-class neural network categorizes brain MRI scans into Glioma, Meningioma, Pituitary Tumour, or No Tumour with probability distributions and clinical action guidelines.
             </p>
@@ -195,9 +194,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="h-12 w-12 rounded-xl bg-amber-950/80 border border-amber-800 flex items-center justify-center text-amber-400 mb-4 group-hover:scale-105 transition-transform">
               <Activity className="h-6 w-6" />
             </div>
-            <h3 className="text-lg font-bold text-white">Uncertainty-Guided Analysis</h3>
+            <h3 className="text-lg font-bold text-white">Automated Quality Assessment</h3>
             <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-              Runs Monte Carlo Dropout forward passes to compute pixel-wise variance and entropy heatmaps. Alerts clinicians when tumor boundaries exhibit high infiltrative ambiguity.
+              Rigorous 8-point check evaluates motion blur (Laplacian variance), tissue contrast dynamic range, cranial domain fit, sequence recognition, and lesion spatial plausibility. Flags scans that require specialist review.
             </p>
           </div>
 

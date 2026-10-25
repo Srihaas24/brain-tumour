@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 
-def evaluate_scan_quality(image_np, binary_mask=None, uncertainty_info=None, filename="scan.jpg"):
+def evaluate_scan_quality(image_np, binary_mask=None, filename="scan.jpg"):
     """
     Automated multi-point Rule-Based Quality Assessment system for MRI inputs and AI inferences.
     Validates input suitability and segmentation reliability across 8 checks.
@@ -83,17 +83,19 @@ def evaluate_scan_quality(image_np, binary_mask=None, uncertainty_info=None, fil
         warnings.append("Input pattern deviates from standard cranial axial/coronal MRI profiles.")
         needs_review = True
 
-    # Check 6: Segmentation Uncertainty
-    boundary_unc = uncertainty_info.get("boundary_uncertainty", 0.0) if uncertainty_info else 0.0
-    is_uncertainty_ok = boundary_unc <= 35.0
+    # Check 6: Lesion Coverage Plausibility
+    lesion_px = int(binary_mask.sum()) if binary_mask is not None else 0
+    total_px = image_np.shape[0] * image_np.shape[1] if image_np is not None else 1
+    lesion_pct = (lesion_px / max(total_px, 1)) * 100.0
+    is_coverage_ok = lesion_pct < 70.0  # >70% coverage is anatomically implausible
     checks.append({
-        "id": "segmentation_uncertainty",
-        "name": "Boundary Uncertainty Metric",
-        "status": "PASS" if is_uncertainty_ok else "WARNING",
-        "detail": f"Boundary uncertainty: {boundary_unc:.1f}% (Review threshold: 35.0%)"
+        "id": "lesion_coverage",
+        "name": "Lesion Coverage Plausibility",
+        "status": "PASS" if is_coverage_ok else "WARNING",
+        "detail": f"Lesion occupies {lesion_pct:.1f}% of image area {'(within normal range)' if is_coverage_ok else '(unusually large; verify mask accuracy)'}"
     })
-    if not is_uncertainty_ok:
-        warnings.append(f"Elevated boundary uncertainty ({boundary_unc:.1f}%); manual contour verification recommended.")
+    if not is_coverage_ok:
+        warnings.append(f"Lesion coverage exceeds 70% of image area ({lesion_pct:.1f}%); mask may include non-lesion tissue.")
         needs_review = True
 
     # Check 7: Morphological Plausibility & Component Integrity
@@ -145,7 +147,7 @@ def evaluate_scan_quality(image_np, binary_mask=None, uncertainty_info=None, fil
         recommendation = "Analysis completed with automated warnings. Human specialist review recommended before clinical action."
     else:
         overall_status = "Acceptable for review"
-        recommendation = "All automated quality and uncertainty checks passed acceptable research thresholds."
+        recommendation = "All automated quality checks passed acceptable research thresholds."
 
     return {
         "overall_status": overall_status,

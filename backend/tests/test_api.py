@@ -43,7 +43,7 @@ class NeuroVisionAPITestCase(unittest.TestCase):
 
         with open(sample_path, 'rb') as f:
             files = {'file': ('sample_glioma.jpg', f, 'image/jpeg')}
-            data = {'model_choice': 'nnunet-2d', 'mc_dropout_passes': 4}
+            data = {'model_choice': 'nnunet-2d'}
             res = self.client.post("/api/analyze", files=files, data=data)
 
         self.assertEqual(res.status_code, 200)
@@ -51,7 +51,6 @@ class NeuroVisionAPITestCase(unittest.TestCase):
         self.assertIn("result_id", resp)
         self.assertIn("classification", resp)
         self.assertIn("segmentation", resp)
-        self.assertIn("uncertainty", resp)
         self.assertIn("quality", resp)
         self.assertIn("mesh_3d", resp)
         self.assertIn("human_review", resp)

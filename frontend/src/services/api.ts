@@ -37,8 +37,7 @@ export async function uploadScanFile(file: File, sliceIdx?: number) {
 export async function runFullAnalysis(
   file: File,
   sliceIdx?: number,
-  modelChoice: string = 'nnunet-2d',
-  mcDropoutPasses: number = 6
+  modelChoice: string = 'nnunet-2d'
 ): Promise<AnalysisResponse> {
   const formData = new FormData();
   formData.append('file', file);
@@ -46,7 +45,6 @@ export async function runFullAnalysis(
     formData.append('slice_idx', sliceIdx.toString());
   }
   formData.append('model_choice', modelChoice);
-  formData.append('mc_dropout_passes', mcDropoutPasses.toString());
 
   const res = await fetch(`${BASE_URL}/analyze`, {
     method: 'POST',

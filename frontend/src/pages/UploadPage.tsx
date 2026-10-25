@@ -27,7 +27,6 @@ export const UploadPage: React.FC<UploadPageProps> = ({ onAnalysisComplete }) =>
   
   // Pipeline Settings
   const [modelChoice, setModelChoice] = useState<string>('nnunet-2d');
-  const [mcPasses, setMcPasses] = useState<number>(6);
 
   // States
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -100,11 +99,10 @@ export const UploadPage: React.FC<UploadPageProps> = ({ onAnalysisComplete }) =>
       const response = await runFullAnalysis(
         selectedFile,
         isVolumetric ? selectedSlice : undefined,
-        modelChoice,
-        mcPasses
+        modelChoice
       );
 
-      setLoadingStep('Computing Monte Carlo uncertainty & 3D mesh...');
+      setLoadingStep('Computing 3D mesh reconstruction...');
       await new Promise(r => setTimeout(r, 400));
 
       onAnalysisComplete(response);
@@ -280,27 +278,6 @@ export const UploadPage: React.FC<UploadPageProps> = ({ onAnalysisComplete }) =>
               </div>
             </div>
 
-            {/* Monte Carlo Dropout Passes */}
-            <div className="mt-6">
-              <div className="flex justify-between items-center text-xs mb-2">
-                <span className="font-semibold text-slate-300">Monte Carlo Dropout Passes:</span>
-                <span className="font-mono text-cyan-400 font-bold">{mcPasses} Passes</span>
-              </div>
-              <input
-                type="range"
-                min="4"
-                max="12"
-                step="2"
-                value={mcPasses}
-                onChange={(e) => setMcPasses(parseInt(e.target.value))}
-                className="w-full accent-cyan-400 cursor-pointer h-1.5 bg-slate-800 rounded-lg"
-              />
-              <div className="flex justify-between text-[10px] text-slate-400 mt-1">
-                <span>Fast (4 passes)</span>
-                <span>Standard (6 passes)</span>
-                <span>Thorough (12 passes)</span>
-              </div>
-            </div>
 
             {/* NIfTI Slice Navigator if volumetric */}
             {isVolumetric && (
@@ -345,7 +322,7 @@ export const UploadPage: React.FC<UploadPageProps> = ({ onAnalysisComplete }) =>
               ) : (
                 <>
                   <Activity className="h-5 w-5" />
-                  <span className="text-sm">Run AI Diagnostic Analysis</span>
+                  <span className="text-sm">Run Diagnostic Analysis</span>
                 </>
               )}
             </button>

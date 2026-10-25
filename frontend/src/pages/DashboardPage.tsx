@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { AnalysisResponse } from '../types/analysis';
 import { ClassificationPanel } from '../components/ClassificationPanel';
 import { SegmentationViewer } from '../components/SegmentationViewer';
-import { UncertaintyViewer } from '../components/UncertaintyViewer';
 import { Brain3DViewer } from '../components/Brain3DViewer';
 import { QualityAssessmentPanel } from '../components/QualityAssessmentPanel';
 import { HumanReviewPanel } from '../components/HumanReviewPanel';
@@ -28,7 +27,7 @@ interface DashboardPageProps {
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({ analysis, onNewAnalysis }) => {
   const [isExportOpen, setIsExportOpen] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<'all' | 'segmentation' | 'uncertainty' | '3d' | 'qa'>('all');
+  const [activeTab, setActiveTab] = useState<'all' | 'segmentation' | '3d' | 'qa'>('all');
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -98,18 +97,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ analysis, onNewAna
           </div>
         </div>
 
-        {/* Row 2: Precision Segmentation & Uncertainty Heatmap */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Row 2: Precision Segmentation */}
+        <div className="grid grid-cols-1 gap-8">
           <SegmentationViewer
             originalImage={analysis.original_image_base64}
             maskImage={analysis.mask_base64}
             overlayImage={analysis.overlay_base64}
             transparentOverlayImage={analysis.transparent_overlay_base64}
             stats={analysis.segmentation}
-          />
-          <UncertaintyViewer
-            uncertaintyData={analysis.uncertainty}
-            originalImage={analysis.original_image_base64}
           />
         </div>
 
